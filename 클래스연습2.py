@@ -1,3 +1,4 @@
+#새로 만든 파일
 class Person:
     def __init__(self, person_id, name):
         self.id = person_id
