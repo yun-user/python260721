@@ -1,3 +1,4 @@
+#부모 클래스(공통 코드)
 class Person:
     def __init__(self, name, phoneNumber):
         self.name = name
