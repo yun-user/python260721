@@ -1,3 +1,4 @@
+import math
 import random
 import tkinter as tk
 
@@ -116,6 +117,7 @@ class Player(RectEntity):
         self.shoot_cooldown = 0
         self.weapon = "basic"
         self.weapon_timer = 0
+        self.walk_phase = 0.0
 
 
 class RunAndGunGame:
@@ -417,6 +419,13 @@ class RunAndGunGame:
         self.move_entity(self.player, self.player.vx, self.player.vy)
         self.player.x = clamp(self.player.x, 0, WORLD_WIDTH - self.player.w)
 
+        if self.player.on_ground and abs(self.player.vx) > 0.05:
+            self.player.walk_phase += abs(self.player.vx) * 0.22
+        elif self.player.on_ground:
+            self.player.walk_phase *= 0.96
+        else:
+            self.player.walk_phase += 0.08
+
         if self.player.y > WINDOW_HEIGHT + 100:
             self.take_damage(1)
             self.player.x = max(120, self.camera_x + 100)
@@ -605,49 +614,111 @@ class RunAndGunGame:
         c = self.canvas
         y = self.player.y
         facing = self.player.facing
+        moving = self.player.on_ground and abs(self.player.vx) > 0.08
+        phase = self.player.walk_phase
+        bob = math.sin(phase * 2.0) * 1.4 if moving else 0.0
+        leg_swing = math.sin(phase) * (7.5 if moving else 1.5)
+        arm_swing = math.sin(phase + math.pi) * (6.0 if moving else 1.0)
+        body_lean = facing * (2.2 if moving else 0.6)
+
+        head_x = screen_x + 9 + body_lean * 0.2
+        torso_x = screen_x + 7 + body_lean * 0.5
+        torso_top = y + 18 + bob * 0.3
+        torso_bottom = y + 43 + bob * 0.3
+        hip_x = screen_x + 17 + body_lean * 0.2
+        shoulder_x = screen_x + 18 + body_lean * 0.3
+        shoulder_y = y + 24 + bob * 0.2
+
         shadow_w = 34 if facing > 0 else 30
         c.create_oval(screen_x + 3, y + self.player.h + 3, screen_x + shadow_w, y + self.player.h + 11, fill="#050910", outline="", tags="world")
 
-        # head and helmet
-        c.create_oval(screen_x + 9, y + 1, screen_x + 25, y + 18, fill="#dfe6f1", outline="#101726", width=1, tags="world")
-        c.create_oval(screen_x + 11, y + 3, screen_x + 23, y + 14, fill="#f7fbff", outline="", tags="world")
-        c.create_rectangle(screen_x + 8, y + 7, screen_x + 26, y + 12, fill="#8f9cb1", outline="", tags="world")
-        c.create_oval(screen_x + 13, y + 6, screen_x + 16, y + 9, fill="#131a28", outline="", tags="world")
-        c.create_oval(screen_x + 19, y + 6, screen_x + 22, y + 9, fill="#131a28", outline="", tags="world")
+        # back leg
+        back_knee_x = hip_x - facing * (4 + leg_swing * 0.45)
+        back_knee_y = y + 41 + bob * 0.4 + abs(leg_swing) * 0.25
+        back_foot_x = hip_x - facing * (7 + leg_swing * 0.8)
+        back_foot_y = y + 53 + bob * 0.5
+        c.create_line(hip_x, y + 41 + bob * 0.2, back_knee_x, back_knee_y, back_foot_x, back_foot_y, fill="#111726", width=5, capstyle="round", joinstyle="round", tags="world")
+        c.create_line(hip_x, y + 41 + bob * 0.2, back_knee_x, back_knee_y, back_foot_x, back_foot_y, fill="#2c3548", width=3, capstyle="round", joinstyle="round", tags="world")
 
-        # torso and armor
-        c.create_rectangle(screen_x + 6, y + 18, screen_x + 28, y + 43, fill="#5e6f88", outline="#101726", width=1, tags="world")
-        c.create_rectangle(screen_x + 8, y + 20, screen_x + 26, y + 41, fill="#f1f5fb", outline="", tags="world")
-        c.create_rectangle(screen_x + 10, y + 23, screen_x + 24, y + 31, fill="#547fff", outline="", tags="world")
-        c.create_rectangle(screen_x + 11, y + 32, screen_x + 23, y + 39, fill="#c9d4e3", outline="", tags="world")
+        # front leg
+        front_knee_x = hip_x + facing * (5 + leg_swing * 0.4)
+        front_knee_y = y + 41 + bob * 0.4 + abs(leg_swing) * 0.15
+        front_foot_x = hip_x + facing * (10 + leg_swing * 0.8)
+        front_foot_y = y + 53 + bob * 0.3
+        c.create_line(hip_x, y + 41 + bob * 0.2, front_knee_x, front_knee_y, front_foot_x, front_foot_y, fill="#111726", width=5, capstyle="round", joinstyle="round", tags="world")
+        c.create_line(hip_x, y + 41 + bob * 0.2, front_knee_x, front_knee_y, front_foot_x, front_foot_y, fill="#30394d", width=3, capstyle="round", joinstyle="round", tags="world")
+        c.create_rectangle(back_foot_x - 4, back_foot_y - 1, back_foot_x + 5, back_foot_y + 3, fill="#0f1624", outline="", tags="world")
+        c.create_rectangle(front_foot_x - 4, front_foot_y - 1, front_foot_x + 6, front_foot_y + 3, fill="#0f1624", outline="", tags="world")
 
-        # legs
-        c.create_polygon(screen_x + 8, y + 41, screen_x + 15, y + 41, screen_x + 12, y + 52, screen_x + 5, y + 52, fill="#2a3347", outline="", tags="world")
-        c.create_polygon(screen_x + 18, y + 41, screen_x + 25, y + 41, screen_x + 29, y + 52, screen_x + 22, y + 52, fill="#2f394f", outline="", tags="world")
-        c.create_rectangle(screen_x + 4, y + 50, screen_x + 13, y + 54, fill="#0f1624", outline="", tags="world")
-        c.create_rectangle(screen_x + 21, y + 50, screen_x + 31, y + 54, fill="#0f1624", outline="", tags="world")
+        # torso and body
+        c.create_polygon(
+            torso_x + 1,
+            torso_top,
+            torso_x + 22,
+            torso_top + 2,
+            torso_x + 24,
+            torso_bottom,
+            torso_x + 5,
+            torso_bottom + 1,
+            fill="#5e6f88",
+            outline="#101726",
+            width=1,
+            tags="world",
+        )
+        c.create_polygon(
+            torso_x + 3,
+            torso_top + 2,
+            torso_x + 20,
+            torso_top + 3,
+            torso_x + 22,
+            torso_bottom - 1,
+            torso_x + 7,
+            torso_bottom,
+            fill="#f1f5fb",
+            outline="",
+            tags="world",
+        )
+        c.create_rectangle(torso_x + 4, torso_top + 5, torso_x + 20, torso_top + 12, fill="#547fff", outline="", tags="world")
+        c.create_rectangle(torso_x + 5, torso_top + 14, torso_x + 19, torso_top + 22, fill="#c9d4e3", outline="", tags="world")
+        c.create_oval(shoulder_x - 8, shoulder_y + 1, shoulder_x + 8, shoulder_y + 17, fill="#dfe6f1", outline="#101726", width=1, tags="world")
+        c.create_oval(shoulder_x - 6, shoulder_y + 3, shoulder_x + 6, shoulder_y + 14, fill="#f7fbff", outline="", tags="world")
+        c.create_rectangle(shoulder_x - 9, shoulder_y + 7, shoulder_x + 9, shoulder_y + 12, fill="#8f9cb1", outline="", tags="world")
+        c.create_oval(shoulder_x - 4, shoulder_y + 6, shoulder_x - 1, shoulder_y + 9, fill="#131a28", outline="", tags="world")
+        c.create_oval(shoulder_x + 2, shoulder_y + 6, shoulder_x + 5, shoulder_y + 9, fill="#131a28", outline="", tags="world")
 
         # arms
-        c.create_line(screen_x + 8, y + 26, screen_x + 2, y + 34, fill="#101726", width=3, tags="world")
-        c.create_line(screen_x + 24, y + 26, screen_x + 31, y + 32, fill="#101726", width=3, tags="world")
-        c.create_line(screen_x + 9, y + 27, screen_x + 14, y + 31, fill="#cfd8e5", width=2, tags="world")
-        c.create_line(screen_x + 23, y + 27, screen_x + 19, y + 33, fill="#cfd8e5", width=2, tags="world")
+        back_hand_x = shoulder_x - facing * (7 + arm_swing * 0.6)
+        back_hand_y = shoulder_y + 15 + bob * 0.25 + abs(arm_swing) * 0.18
+        front_elbow_x = shoulder_x + facing * (6 + arm_swing * 0.25)
+        front_elbow_y = shoulder_y + 9 + bob * 0.2 + arm_swing * 0.12
+        front_hand_x = shoulder_x + facing * (12 + arm_swing * 0.45)
+        front_hand_y = shoulder_y + 16 + bob * 0.2
 
-        # gun
+        c.create_line(shoulder_x, shoulder_y + 11, back_hand_x, back_hand_y, fill="#101726", width=4, capstyle="round", joinstyle="round", tags="world")
+        c.create_line(shoulder_x, shoulder_y + 11, front_elbow_x, front_elbow_y, front_hand_x, front_hand_y, fill="#101726", width=4, capstyle="round", joinstyle="round", tags="world")
+        c.create_line(shoulder_x, shoulder_y + 11, back_hand_x, back_hand_y, fill="#cfd8e5", width=2, capstyle="round", joinstyle="round", tags="world")
+        c.create_line(shoulder_x, shoulder_y + 11, front_elbow_x, front_elbow_y, front_hand_x, front_hand_y, fill="#cfd8e5", width=2, capstyle="round", joinstyle="round", tags="world")
+
+        # gun and aiming pose
+        gun_y = shoulder_y + 8 + bob * 0.2
         if facing > 0:
             muzzle_x = screen_x + 31
-            c.create_rectangle(screen_x + 22, y + 23, screen_x + 43, y + 28, fill="#1e2635", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x + 28, y + 20, screen_x + 33, y + 26, fill="#c2ccd8", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x + 20, y + 25, screen_x + 26, y + 31, fill="#6b768c", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x + 40, y + 24, screen_x + 47, y + 27, fill="#9aa8ba", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 22, gun_y, screen_x + 44, gun_y + 5, fill="#1e2635", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 27, gun_y - 3, screen_x + 32, gun_y + 3, fill="#c2ccd8", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 20, gun_y + 2, screen_x + 26, gun_y + 8, fill="#6b768c", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 39, gun_y + 1, screen_x + 47, gun_y + 4, fill="#9aa8ba", outline="#0c111b", width=1, tags="world")
+            c.create_oval(muzzle_x + 2, gun_y, muzzle_x + 6, gun_y + 4, fill="#ffe8a6", outline="", tags="world")
         else:
             muzzle_x = screen_x - 1
-            c.create_rectangle(screen_x - 10, y + 23, screen_x + 11, y + 28, fill="#1e2635", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x + 4, y + 20, screen_x + 9, y + 26, fill="#c2ccd8", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x + 8, y + 25, screen_x + 14, y + 31, fill="#6b768c", outline="#0c111b", width=1, tags="world")
-            c.create_rectangle(screen_x - 7, y + 24, screen_x - 13, y + 27, fill="#9aa8ba", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x - 10, gun_y, screen_x + 12, gun_y + 5, fill="#1e2635", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 4, gun_y - 3, screen_x + 9, gun_y + 3, fill="#c2ccd8", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x + 8, gun_y + 2, screen_x + 14, gun_y + 8, fill="#6b768c", outline="#0c111b", width=1, tags="world")
+            c.create_rectangle(screen_x - 7, gun_y + 1, screen_x - 13, gun_y + 4, fill="#9aa8ba", outline="#0c111b", width=1, tags="world")
+            c.create_oval(muzzle_x - 2, gun_y, muzzle_x + 2, gun_y + 4, fill="#ffe8a6", outline="", tags="world")
 
-        c.create_oval(muzzle_x + 2, y + 23, muzzle_x + 6, y + 27, fill="#ffe8a6", outline="", tags="world")
+        # accessory straps and detail lines
+        c.create_line(torso_x + 8, torso_top + 4, torso_x + 15, torso_bottom - 2, fill="#d7deea", width=1, tags="world")
+        c.create_line(torso_x + 16, torso_top + 4, torso_x + 10, torso_bottom - 2, fill="#8ca0b8", width=1, tags="world")
 
     def draw_enemy_sprite(self, enemy, screen_x):
         c = self.canvas
