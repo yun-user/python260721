@@ -234,15 +234,38 @@
 #         print("잘못된 선택입니다.")
 
 # 보안 관점에서 서버의 접속 기록을 분석하고, 무차별 대입 공격(Brute Force)이나 비정상적인 접근을 찾아내는 미니 보안 스캐너
-
 #LogParser 클래스와 ThreatDetector 클래스를 분리하여 설계
+
+#문자열을 자르고 데이터를 다루기 쉽게 정리하는 역할 (전처리)
 class LogParser:
-    log_list = ["192.168.0.1 - FAIL", "10.0.0.2 - SUCCESS", "192.168.0.1 - FAIL"] #더미 로그 리스트
-    def __init__(self,):
+    def __init__(self,log_list):
+        self.log_list = log_list #쪼개고 가공할 로그 리스트를 인스턴스 변수로 저장
+
+        for log in self.log_list:# 로그 리스트를 순회
+            ip, status = log.split(" - ") #로그 문자열을 " - " 기준으로 쪼개서 IP와 상태를 분리
+            print(dict(ip = ip, status = status)) #IP와 상태를 딕셔너리 형태로 출력
 
 
-class ThreatDetector:
-    def __init__(self):
+
+#정리된 통계 데이터를 바탕으로 이상 징후를 계산하고 경고하는 역할 (분석)
+class ThreatDetector:#상속받음
+    def __init__(self,log_list):
+        self.log_list = log_list #분석할 로그 리스트를 인스턴스 변수로 저장
+        self.ip_fail_count = {} #IP별 실패 횟수를 저장할 딕셔너리
+
+    def analyze(self,):
+        pass
+
+    def detect_brute_force(self, threshold = 3):
+        for fail in self.ip_fail_count: #실패 횟수 딕셔너리를 순회
+            if self.ip_fail_count[fail] >= threshold:
+                print(f"⚠️ 경고: {fail} IP에서 {self.ip_fail_count[fail]}회 이상 로그인 실패 발생! (무차별 대입 공격 의심)")
+if __name__ == "__main__":
+    log_list = ["192.168.0.1 - FAIL", "10.0.0.2 - SUCCESS", "192.168.0.1 - FAIL"] #더미 로그 리스트, 메인 영역에 선언하기
+
+    data1 = LogParser(log_list) #LogParser 객체 생성
+    data2 = ThreatDetector(log_list) #ThreatDetector 객체 생성
+
 
 
 
