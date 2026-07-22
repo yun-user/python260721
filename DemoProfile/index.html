@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="윤승재의 개인 포트폴리오 웹사이트" />
+    <title>윤승재 | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home">YS</a>
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="home" class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Python · Web · Java</p>
+          <h1>윤승재</h1>
+          <p class="lead">
+            Python, 웹, Java를 중심으로 실용적인 기능과 깔끔한 구조를 선호하는 개발자입니다.
+            보여주기보다 잘 작동하고, 오래 두어도 덜 흔들리는 결과물을 만듭니다.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="mailto:y66sj@naver.com">Email Me</a>
+            <a class="button secondary" href="#projects">View Work</a>
+          </div>
+          <div class="hero-meta">
+            <div>
+              <span class="meta-label">Email</span>
+              <strong>y66sj@naver.com</strong>
+            </div>
+            <div>
+              <span class="meta-label">Focus</span>
+              <strong>Clean UI, solid logic</strong>
+            </div>
+          </div>
+        </div>
+
+        <aside class="profile-card">
+          <div class="profile-badge">Studio notes</div>
+          <div class="profile-note">
+            <span>01</span>
+            <div>
+              <strong>Python automation</strong>
+              <p>반복 작업을 줄이고, 작은 도구로 일의 흐름을 정리합니다.</p>
+            </div>
+          </div>
+          <div class="profile-note">
+            <span>02</span>
+            <div>
+              <strong>Web interface</strong>
+              <p>HTML5, CSS3, JavaScript로 화면의 흐름과 밀도를 조절합니다.</p>
+            </div>
+          </div>
+          <div class="profile-note">
+            <span>03</span>
+            <div>
+              <strong>Java structure</strong>
+              <p>책임이 분명한 구조를 선호해서 유지보수하기 쉬운 코드를 지향합니다.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="about" class="panel split split-alt">
+        <div>
+          <p class="section-tag">About</p>
+          <h2>문제를 빠르게 이해하고, 구조적으로 풀어내는 스타일입니다.</h2>
+        </div>
+        <p>
+          Python으로는 자동화와 데이터 처리, 웹에서는 HTML5, CSS3, JavaScript를 활용한
+          인터랙티브한 화면 구현, Java로는 명확한 객체지향 구조와 로직 설계를 선호합니다.
+          설계, 속도, 유지보수 사이의 균형을 맞추는 쪽에 관심이 많습니다.
+        </p>
+      </section>
+
+      <section id="skills" class="panel">
+        <p class="section-tag">Skills</p>
+        <div class="chip-grid" id="skillChips">
+          <button class="chip" type="button">Python</button>
+          <button class="chip" type="button">HTML5</button>
+          <button class="chip" type="button">CSS3</button>
+          <button class="chip" type="button">JavaScript</button>
+          <button class="chip" type="button">Java</button>
+          <button class="chip" type="button">Responsive Design</button>
+          <button class="chip" type="button">Problem Solving</button>
+          <button class="chip" type="button">Clean Architecture</button>
+        </div>
+      </section>
+
+      <section id="projects" class="panel">
+        <p class="section-tag">Projects</p>
+        <div class="project-grid">
+          <article class="project-card">
+            <span class="project-index">01</span>
+            <h3>Interactive Portfolio</h3>
+            <p>과한 장식 대신 레이아웃과 타이포그래피에 집중한 개인 소개용 원페이지 사이트.</p>
+          </article>
+          <article class="project-card">
+            <span class="project-index">02</span>
+            <h3>Python Utility Tools</h3>
+            <p>반복 작업을 줄이고 데이터 정리를 빠르게 만드는 스크립트와 자동화 도구.</p>
+          </article>
+          <article class="project-card">
+            <span class="project-index">03</span>
+            <h3>Java Business Logic</h3>
+            <p>명확한 책임 분리와 유지보수를 고려한 객체지향 로직 설계 중심의 구현.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="panel contact-panel">
+        <div>
+          <p class="section-tag">Contact</p>
+          <h2>함께 만들고 싶은 프로젝트가 있다면 연락해주세요.</h2>
+        </div>
+        <a class="button primary wide" href="mailto:y66sj@naver.com">y66sj@naver.com</a>
+      </section>
+    </main>
+  </body>
+</html>

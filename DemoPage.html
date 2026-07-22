@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DemoPage - HTML5, CSS3, JavaScript</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: rgba(255, 255, 255, 0.82);
+      --text: #1f2937;
+      --muted: #5b6472;
+      --primary: #0f766e;
+      --accent: #d97706;
+      --border: rgba(31, 41, 55, 0.12);
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(217, 119, 6, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.14), transparent 32%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    header {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 24px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.1);
+      color: var(--primary);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 1.05;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      grid-column: span 4;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2,
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .card p,
+    .panel p,
+    li {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .panel {
+      grid-column: span 8;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: var(--shadow);
+    }
+
+    .code-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #111827;
+      color: #e5e7eb;
+      overflow-x: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+    }
+
+    .secondary {
+      background: rgba(217, 119, 6, 0.12);
+      color: #92400e;
+    }
+
+    .status {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      background: rgba(217, 119, 6, 0.08);
+      color: #7c2d12;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+    }
+
+    .exercise-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .card,
+      .panel {
+        grid-column: span 12;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <span class="badge">HTML5 · CSS3 · JavaScript</span>
+      <h1>한 파일로 배우는 데모 페이지</h1>
+      <p class="lead">
+        이 페이지는 HTML5 구조, CSS3 레이아웃과 스타일, JavaScript 기본 동작을 한 번에 살펴볼 수 있도록 만든 연습용 예제입니다.
+        버튼을 눌러 동작을 확인하고, 아래 코드 박스를 보면서 각 영역의 역할을 익혀보세요.
+      </p>
+    </header>
+
+    <section class="grid" aria-label="학습 예제 섹션">
+      <article class="card">
+        <h2>HTML5</h2>
+        <p>header, main, section, article, footer 같은 시맨틱 태그를 사용해 구조를 나눕니다.</p>
+      </article>
+
+      <article class="card">
+        <h2>CSS3</h2>
+        <p>그라데이션 배경, 카드 UI, 반응형 그리드, 그림자, 둥근 모서리 등 자주 쓰는 스타일을 포함했습니다.</p>
+      </article>
+
+      <article class="card">
+        <h2>JavaScript</h2>
+        <p>버튼 클릭 이벤트로 텍스트를 바꾸고, 현재 시간을 화면에 표시하는 간단한 기능을 넣었습니다.</p>
+      </article>
+
+      <section class="panel">
+        <h2>실습 영역</h2>
+        <p>버튼을 눌러 페이지의 안내 문구를 바꿔보세요. 스스로 코드를 수정하면서 구조와 스타일을 분리해 보는 연습에 좋습니다.</p>
+
+        <div class="controls">
+          <button class="primary" id="changeMessageBtn">메시지 바꾸기</button>
+          <button class="secondary" id="showTimeBtn">현재 시간 보기</button>
+        </div>
+
+        <div class="status" id="statusBox">여기에 JavaScript 결과가 표시됩니다.</div>
+
+        <div class="code-box" aria-label="코드 예시">
+&lt;section&gt;
+  &lt;h2&gt;실습 영역&lt;/h2&gt;
+  &lt;button&gt;메시지 바꾸기&lt;/button&gt;
+&lt;/section&gt;
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>학습 포인트</h2>
+        <ul class="exercise-list">
+          <li>태그 구조를 읽고 역할을 파악하기</li>
+          <li>CSS 변수와 선택자 사용 익히기</li>
+          <li>이벤트 처리와 DOM 조작 살펴보기</li>
+        </ul>
+      </section>
+    </section>
+
+    <footer>
+      직접 내용을 수정해 보면서 HTML5, CSS3, JavaScript의 차이를 비교해 보세요.
+    </footer>
+  </main>
+
+  <script>
+    const statusBox = document.getElementById("statusBox");
+    const changeMessageBtn = document.getElementById("changeMessageBtn");
+    const showTimeBtn = document.getElementById("showTimeBtn");
+
+    changeMessageBtn.addEventListener("click", () => {
+      statusBox.textContent = "HTML은 구조를, CSS는 디자인을, JavaScript는 동작을 담당합니다.";
+    });
+
+    showTimeBtn.addEventListener("click", () => {
+      const now = new Date();
+      statusBox.textContent = `현재 시간: ${now.toLocaleString("ko-KR")}`;
+    });
+  </script>
+</body>
+</html>
