@@ -1,7 +1,7 @@
 import sqlite3
 
 #연결 객체 생성(raw string 사용): 영구적으로 파일 저장
-con = sqlite3.connect(r"c:\work\test.db") 
+con = sqlite3.connect(r"c:\work\sample.db") 
 
 #커서 객체 생성
 cur = con.cursor()
@@ -31,3 +31,7 @@ cur.execute("SELECT * FROM PhoneBook;")
 #검색 결과 출력
 for row in cur:
     print(row)
+    
+#쓰기 작업을 완료했으면 반드시 commit()을 호출해야 실제 DB에 반영됨
+con.commit()
+con.close()
