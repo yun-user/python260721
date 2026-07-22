@@ -21,8 +21,12 @@ soup = BeautifulSoup(page, "html.parser")
 #print(soup.find_all("p",attrs={"class":"outer-text"})) #class 속성이 outer-text인 p태그만 검색
 
 #태그 내부에 문자열만 추출
+#파일에 저장
+f = open("demo.txt", "wt", encoding="utf-8")
 for item in soup.find_all("p"):
     title = item.text.strip() #strip() : 문자열 양쪽 공백 제거
     #치환
     title = title.replace("\n"," ") #\n 제거
     print(title)
+    f.write(title + "\n")
+f.close()
