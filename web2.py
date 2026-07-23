@@ -1,9 +1,12 @@
 # web2.py 
 #클리앙의 중고장터를 크롤링 
+
 #웹크롤링을 위한 라이브러리 
 from bs4 import BeautifulSoup
+
 #웹서버에 요청
 import urllib.request 
+
 #특정 문자열을 검색하기 위한 정규표현식
 import re 
 
